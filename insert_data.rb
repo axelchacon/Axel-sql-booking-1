@@ -23,15 +23,44 @@
 # p result.values #[["1", "AXEL", nil, nil]]
 
 ###### Paso3 :  usando el CSV de nuesto arhcivo books.csv######
+# require "pg";
+# require "csv";
+
+# conn = PG.connect( dbname: 'booking' ) 
+# CSV.foreach("books.csv", headers: true) do |row|
+#     # Paso 1 ####
+
+#     # p row["author_name"]
+#     # p row
+
+#     # Paso 2 ####
+#     author_data = {
+#         "name" => row["author_name"],
+#         "nationality" => row["author_nationality"],
+#         "birthdate" => row["author_birthdate"]
+#     }
+#     p author_data
+# end
+
+
+###### Paso4 :  dejando casi listo con Ruby para añadir a la base de datos usando Ruby######
+
 require "pg";
 require "csv";
 
-conn = PG.connect( dbname: 'booking' ) 
-CSV.foreach("books.csv", headers: true) do |row|
-    p row["author_name"]
-    # p row
+DB = PG.connect( dbname: 'booking' ) 
+def create(table, data) # table= nombre de la tabla y date es los datos que vamos a llenar en la tabla
+    # DB.exec( %[INSERT INTO #{table}(name, nationality,birthdate ) VALUES (#{data})] )
+    # DB.exec( %[INSERT INTO #{table}(#{data.keys.join(",")}) VALUES (#{data.values.map{|value| "'#{value}'"}.join(",")})])
+    p %[INSERT INTO #{table}(#{data.keys.join(",")}) VALUES (#{data.values.map{|value| "'#{value}'"}.join(",")})]
 end
-# conn.exec( %[INSERT INTO authors(name) VALUES ('AXEL')] ) 
-# result = conn.exec( "SELECT * FROM authors" ) 
-# p result.fields #["id", "name", "nationality", "birthdate"]
-# p result.values #[["1", "AXEL", nil, nil]]
+CSV.foreach("books.csv", headers: true) do |row|
+
+    author_data = {
+        "name" => row["author_name"],
+        "nationality" => row["author_nationality"],
+        "birthdate" => row["author_birthdate"]
+    }
+    create("authors", author_data)
+    # p author_data
+end
