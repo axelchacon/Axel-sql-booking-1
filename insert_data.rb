@@ -50,9 +50,19 @@ require "csv";
 
 DB = PG.connect( dbname: 'booking' ) 
 def create(table, data) # table= nombre de la tabla y date es los datos que vamos a llenar en la tabla
-    # DB.exec( %[INSERT INTO #{table}(name, nationality,birthdate ) VALUES (#{data})] )
+    ##### Paso1 #######
+    # # DB.exec( %[INSERT INTO #{table}(name, nationality,birthdate ) VALUES (#{data})] )
     # DB.exec( %[INSERT INTO #{table}(#{data.keys.join(",")}) VALUES (#{data.values.map{|value| "'#{value}'"}.join(",")})])
-    p %[INSERT INTO #{table}(#{data.keys.join(",")}) VALUES (#{data.values.map{|value| "'#{value}'"}.join(",")})]
+    # # p %[INSERT INTO #{table}(#{data.keys.join(",")}) VALUES (#{data.values.map{|value| "'#{value}'"}.join(",")})]
+
+    ##### Paso2 : evitar datos repetidos en las tablas por ejemplos SELECT * FROM authors para que no tenga datos repetidos  #######
+    ##### Inicio: estos dos líneas de código sirven para no tener datos repetidos#####
+    author = DB.exec(%[SELECT * FROM #{table} WHERE name = '#{data['name']}']).first #bota un nil si no hay o un registro si hay
+    # # p autor # retorna hashe scomo  {"id"=>"1", "name"=>"Belia Grady", "nationality"=>"British", "birthdate"=>"1970-02-14"}
+    return if author
+    ##### Final: estos dos líneas de código sirven para no tener datos repetidos#####
+    DB.exec( %[INSERT INTO #{table}(#{data.keys.join(",")}) VALUES (#{data.values.map{|value| "'#{value}'"}.join(",")})])
+
 end
 CSV.foreach("books.csv", headers: true) do |row|
 
