@@ -14,7 +14,7 @@ class Booking
             case action
             # when "1" then puts top_publishers_prueba
             when "1" then puts top_publishers
-            when "2" then puts serach_books(param)
+            when "2" then puts search_books(param)
             when "3" then puts "Option 3"
             when "menu" then print_menu
             when "exit" then puts "Thank you for using booking"
@@ -54,11 +54,12 @@ def print_welcome
     table.rows = result.values
     puts table
   end
-  def serach_books
+  def search_books(param)
     # nos mandan "title=terrible" por liro
-    result = @db.exec("SELECT * FROM publishers ORDER BY annual_revenue DESC LIMIT 5");
+    column, query = param.split('=')
+    result = @db.exec("SELECT * FROM books WHERE LOWER(#{column}) LIKE '%#{query.downcase}%'");
     table = Terminal::Table.new
-    table.title ="Top Publishers by Annual Revenue"
+    table.title ="Search Books"
     table.headings = result.fields
     table.rows = result.values
     puts table
