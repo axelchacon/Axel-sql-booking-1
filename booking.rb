@@ -10,11 +10,11 @@ class Booking
         action = nil
         until action == "exit"
             print "> "
-            action = gets.chomp
+            action, param = gets.chomp.split
             case action
             # when "1" then puts top_publishers_prueba
             when "1" then puts top_publishers
-            when "2" then puts "Option 2"
+            when "2" then puts serach_books(param)
             when "3" then puts "Option 3"
             when "menu" then print_menu
             when "exit" then puts "Thank you for using booking"
@@ -47,6 +47,15 @@ def print_welcome
 #     puts table
 #   end
   def top_publishers
+    result = @db.exec("SELECT * FROM publishers ORDER BY annual_revenue DESC LIMIT 5");
+    table = Terminal::Table.new
+    table.title ="Top Publishers by Annual Revenue"
+    table.headings = result.fields
+    table.rows = result.values
+    puts table
+  end
+  def serach_books
+    # nos mandan "title=terrible" por liro
     result = @db.exec("SELECT * FROM publishers ORDER BY annual_revenue DESC LIMIT 5");
     table = Terminal::Table.new
     table.title ="Top Publishers by Annual Revenue"
