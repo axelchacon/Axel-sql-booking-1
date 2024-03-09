@@ -15,6 +15,7 @@ def create(table, data) # table= nombre de la tabla y date es los datos que vamo
     author = DB.exec(%[SELECT * FROM #{table} WHERE name = '#{data['name']}']).first #bota un nil si no hay o un registro si hay
     # # p autor # retorna hashe scomo  {"id"=>"1", "name"=>"Belia Grady", "nationality"=>"British", "birthdate"=>"1970-02-14"}
     return  if author 
+    puts author
    
 
     ##### Final: estos dos líneas de código sirven para no tener datos repetidos#####
