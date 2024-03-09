@@ -2,6 +2,7 @@
 require "pg";
 require "csv";
 
+cvs_file = ARGV[0]
 DB = PG.connect( dbname: 'booking' ) 
 def create(table, data,unique_column) # table= nombre de la tabla y date es los datos que vamos a llenar en la tabla
     # p unique_column
@@ -13,7 +14,7 @@ end
 def find(table, column, value)
     DB.exec(%[SELECT * FROM #{table} WHERE #{column} = '#{value.gsub("'","''")}']).first
 end
-CSV.foreach("books.csv", headers: true) do |row|
+CSV.foreach(cvs_file, headers: true) do |row|
 
     author_data = {
         "name" => row["author_name"],
